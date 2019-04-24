@@ -303,6 +303,224 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/24/Metasploit学习笔记（一)-2019-4-24/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wangggod">
+      <meta itemprop="description" content="This is my fisrt blog to record my life and thoughts">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Something for Nothing">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/24/Metasploit学习笔记（一)-2019-4-24/" class="post-title-link" itemprop="url">Metasploit学习笔记（一）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-24 22:35:14" itemprop="dateCreated datePublished" datetime="2019-04-24T22:35:14+08:00">2019-04-24</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+            <span id="/2019/04/24/Metasploit学习笔记（一)-2019-4-24/" class="leancloud_visitors" data-flag-title="Metasploit学习笔记（一）">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读次数：</span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <!-- wp:paragraph -->
+<p></p><p>直接从情报搜集开始写好了。使用系统为kali。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph {"fontSize":"large"} -->
+<p></p><p class="has-large-font-size"><strong>一、被动信息搜集 </strong></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p>    1、whois命令查询<br></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; whois testfire.net（目标网址）</code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    2、netcraft网站查询</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p>    3、nslookup命令查询</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>root@kali:~# nslookup</code></pre></p>
+<blockquote>
+<p>set type=mx<br>testfire.net<br><!-- /wp:code --></p>
+</blockquote>
+<!-- wp:paragraph -->
+<p></p><p>    4、Google Hacking，利用site:目标网址进行指定范围查询</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph {"fontSize":"large"} -->
+<p></p><p class="has-large-font-size"><strong>二、主动信息搜集</strong></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p>    1、nmap扫描</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>root@kali:~# nmap -sS -Pn 192.168.1.1（目标IP）<br>root@kali:~# nmap -sS -Pn -A 192.168.1.1</code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    2、metasploit中使用postgresql数据库</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>启动检查数据库：</code></pre></p>
+<p>系统子数据库启动指令:<br>root@kali:~# /etc/init.d/postgresql start</p>
+<p>将用户名为postgres 密码为toor的postgresql数据库:<br>msf &gt; db_connect postgres:<a href="mailto:toor@127.0.0.1" target="_blank" rel="noopener">toor@127.0.0.1</a>/msf</p>
+<p>检查数据库状态:<br>msf &gt; db_status<br><!-- /wp:code --></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>将nmap的输出结果生成为Subnet1.xml导入Metasploit:</code></pre></p>
+<p>root@kali: /home/output# nmap -Pn -sS -A -oX Subnet1.xml 192.168.1.0/24 //后面也可以指定确定的地址<br>msf &gt; db_status<br>msf &gt; db_import /home/output/Subnet1.xml<br>msf &gt; hosts -c address<br><!-- /wp:code --></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>TCP空闲扫描（调用模块）</code></pre></p>
+<p>msf &gt; use auxiliary/scanner/ip/ipidseq<br>msf auxiliary(ipidseq) &gt; show options<br>msf auxiliary(ipidseq) &gt; set RHOSTS 192.162.1.1 //或192.168.1.0/24<br>msf auxiliary(ipidseq) &gt; set THREADS 50<br>msf auxiliary(ipidseq) &gt; run<br><!-- /wp:code --></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>直接在Metasploit中使用nmap</code></pre></p>
+<p>连接至数据库：<br>msf &gt; db_connect postgres:<a href="mailto:toor@127.0.0.1" target="_blank" rel="noopener">toor@127.0.0.1</a>/msf</p>
+<p>启用nmap<br>msf &gt; db_nmap -sS -A 192.168.1.1</p>
+<p>查看扫描服务结果<br>msf &gt; services -u<br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    3、metasploit进行端口扫描 </p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>调用模块<br>msf &gt; use auxiliary/scanner/postscan/syn<br>msf auxiliary(syn) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(syn) &gt; set THREADS 50<br>msf auxiliary(syn) &gt; run</code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph {"fontSize":"large"} -->
+<p></p><p class="has-large-font-size"><strong>三、针对性扫描(调用模块)</strong></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p>    1、服务消息块协议扫描</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; use auxiliary/scanner/smb/smb_version<br>msf auxiliary(smb_version) &gt; show options<br>msf auxiliary(smb_version) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(smb_version) &gt; run </code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    2、配置不当的MS SQL </p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; use auxiliary/scanner/mssql/mssql_ping<br>msf auxiliary(mssql_ping) &gt; show options<br>msf auxiliary(mssql_ping) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(mssql_ping) &gt; set THREADS 255<br>msf auxiliary(mssql_ping) &gt; run </code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    3、ssh服务器扫描</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; use auxiliary/scanner/ssh/ssh_version<br>msf auxiliary(ssh_version) &gt; show options<br>msf auxiliary(ssh_version) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(ssh_version) &gt; set THREADS 50<br>msf auxiliary(ssh_version) &gt; run </code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>    4、FTP扫描</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; use auxiliary/scanner/ftp/ftp_version<br>msf auxiliary(ftp_version) &gt; show options<br>msf auxiliary(ftp_version) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(ftp_version) &gt; set THREADS 255<br>msf auxiliary(ftp_version) &gt; run </code></pre><br><!-- /wp:code --></p>
+<!-- wp:paragraph -->
+<p></p><p>     5、snmp扫描</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:code -->
+<p><pre class="wp-block-code"><code>msf &gt; use auxiliary/scanner/snmp/snmp_login<br>msf auxiliary(snmp_login) &gt; show options<br>msf auxiliary(snmp_login) &gt; set RHOSTS 192.168.1.1<br>msf auxiliary(snmp_login) &gt; set THREADS 50<br>msf auxiliary(snmp_login) &gt; run </code></pre><br><!-- /wp:code --></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/23/从零开始的渗透的练习生-2019-4-23/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1849,233 +2067,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/13/下次VPS升级前一定要记得先备份，最好先睁开眼-2019-4-13/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Wangggod">
-      <meta itemprop="description" content="This is my fisrt blog to record my life and thoughts">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Something for Nothing">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/13/下次VPS升级前一定要记得先备份，最好先睁开眼-2019-4-13/" class="post-title-link" itemprop="url">下次VPS升级前一定要记得先备份，最好先睁开眼</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-04-13 18:20:21" itemprop="dateCreated datePublished" datetime="2019-04-13T18:20:21+08:00">2019-04-13</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            
-          
-
-          
-          
-            <span id="/2019/04/13/下次VPS升级前一定要记得先备份，最好先睁开眼-2019-4-13/" class="leancloud_visitors" data-flag-title="下次VPS升级前一定要记得先备份，最好先睁开眼">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读次数：</span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <!-- wp:paragraph -->
-<p></p><p>写下标题的时候我是颤抖着的，因为我的一个无操作，差点就回不来这里了。</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>这周一直在倒腾WordPress，按照网上的教程和记忆中依稀残存的关于Nginx和php的知识，我凑出了现在眼前的这个网站。不得不说Nginx+mysql+php这套配置着实比用Apache+MySQL+php稍微复杂那么一丢丢。</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>总归是能用了，结果我再次陷入了“程序员不需要视力”的危机…事情的起因是我发现我的WordPress主题不能自定义一个模板。具体表现为：新建一个页面的时候没有看到有“模板”这个选项。在网上搜罗了一圈，发现普遍反映的可能性有两个：</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:preformatted -->
-<p><pre class="wp-block-preformatted">1、php.ini这个配置文件中禁用了scandir函数，导致不能扫描读取。<br>2、自己新建的模板文件没有按照文档要求的在开头加上表示注释，没有被成功读取<br></pre><br><!-- /wp:preformatted --></p>
-<!-- wp:paragraph -->
-<p></p><p>思索了三秒我盲猜第二个实现难度比较低，也比较容易验证，所以就在自己刚刚写的模板文件开头按照江湖配方加上了神秘注释：</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>&lt;?php /<em> Template Name: test </em>/ ?&gt;</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>这个配方的用法是先在当前主题的文件夹内新建一个.php文件，然后这个文件的最顶部加上这句话就可以让WordPress识别出这个是个模板，然后你就能在WordPress后台-外观-编辑主题-右上角选择你的主题，然后就能在界面右边看到你新建的文件。如下图：</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:image {"id":139} -->
-<p><figure class="wp-block-image"><img src="http://106.12.124.87/wp-content/uploads/2019/04/image-2-1024x340.png" alt class="wp-image-139"></figure><br><!-- /wp:image --></p>
-<!-- wp:paragraph -->
-<p></p><p>我先按照方法二，在我的vps上新建了一个模板文件命名为video，在下图的右下角</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:image {"id":140} -->
-<p><figure class="wp-block-image"><img src="http://106.12.124.87/wp-content/uploads/2019/04/image-3-1024x51.png" alt class="wp-image-140"><figcaption>大家一定要注意观察我这张图的，它坑了我整整一下午…</figcaption></figure><br><!-- /wp:image --></p>
-<!-- wp:paragraph -->
-<p></p><p>然而操作完之后我还是没有在网站的后台管理那里看到这个文件，于是我开始尝试第一个情况，即php.ini禁用函数。在网上搜罗的时候看到有人问怎么知道这个php.ini放在哪，第一个方法你可以直接用find指令</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>例1：查找tomcat7文件夹所在的位置</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:code -->
-<p><pre class="wp-block-code"><code>find / -name ‘tomcat7’ -type d<br></code></pre><br><!-- /wp:code --></p>
-<!-- wp:paragraph -->
-<p></p><p>例2：查找server.xml文件的位置</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:code -->
-<p><pre class="wp-block-code"><code>find / -name ‘server.xml’ -print</code></pre><br><!-- /wp:code --></p>
-<!-- wp:paragraph -->
-<p></p><p>第二个方法你可以访问你建站时候的探针网址，就是<a href="http://xxxxxx/info.php这个页面" target="_blank" rel="noopener">http://xxxxxx/info.php这个页面</a></p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:image {"id":141} -->
-<p><figure class="wp-block-image"><img src="http://106.12.124.87/wp-content/uploads/2019/04/image-4.png" alt class="wp-image-141"><figcaption>写得清清楚楚</figcaption></figure><br><!-- /wp:image --></p>
-<!-- wp:paragraph -->
-<p></p><p>然后通过vim指令，找到disable_function这个关键字，所有被禁用的函数都会在这个关键字后面。问题又出现了，我的php.ini中甚至没有出现scandir这个函数，甚至整个文件中都找不到…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>陷入僵局。我又开始在网上漫无目的地搜罗，结果偶然瞄到貌似大家的系统版本都是 Ubuntu 16.04.3 LTS ，为啥我的是14.03，该不会是系统版本的锅吧…然后偏不巧在我重新ssh连接上vps的时候，系统提示了一句有新版本可以使用…我再次考虑了三秒，决定搏一搏，升级看看能不能解决这个问题。就在我命令都敲好了准备回车的最后一秒，突然想到，万一没了不就很尴尬…还是做个快照备份比较妥当。最后证明我当时这三秒的思考真是太值得了。</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>然后等系统升级好之后我傻眼了，文件是都还在，但是莫名其妙的帮我把Apache2打开了，结果我在浏览器输入服务器的地址，弹出来的页面一直都是Apache成启动的画面…wrng，我的Nginx呢…然后我找到Nginx的配置文件，发现文件变成初始状态了，重配之后打开发现还是不行。细细检查完确定配置无误，但是打开还是Apache2的界面…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>仔细一想这个问题其实很简单，之前没升级系统前我没有开过一次Apache2，只用Nginx来监听80端口。现在升级完系统Apache2默认打开，也是监听80端口，我估摸着应该是Apache2的战斗力比较高，把Nginx给挤掉了…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>所以我开始着手把Apache2停止，但是不知道为什么不能成功，修改监听端口后也不能成功，最后我决定卸载Apache2，反正现在暂时没用。观摩了网上的讨论发现Apache2貌似是拆迁钉子户，折腾了老半天没删干净，最后逼得我掏出了</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>rm -rf</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>然后我</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>命令打错了</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>打错了</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>我把整个var文件夹</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>删了.</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>这下我彻底什么也打不开了，网上搜罗了一下，发现撤回操作及其复杂…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>还好我，当时快照备份了</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>然后又是一番折腾，到了凌晨两点我才把这个小破站又找回来了…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>而且在重建的过程中我发现了一个问题，就是我之前添加的模板，添加错文件夹了…事实上我的WordPress是跑在var/www/html下的，但是我每次连接服务器之后习惯直接ls -a看一眼，偏不巧不知道为什么我的根目录下，也有一个wordpress的文件夹…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:image {"id":142} -->
-<p><figure class="wp-block-image"><img src="http://106.12.124.87/wp-content/uploads/2019/04/image-5-1024x71.png" alt class="wp-image-142"></figure><br><!-- /wp:image --></p>
-<!-- wp:paragraph -->
-<p></p><p>然后我每次都是直接进这个文件夹操作…</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>。。。</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>妈的</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>尽早按照之前的流程添加模板，非常顺利</p><br><!-- /wp:paragraph --><p></p>
-<!-- wp:paragraph -->
-<p></p><p>嗯，原来不是奇怪的bug，是我瞎了。。。</p><br><!-- /wp:paragraph --><p></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2122,7 +2113,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
